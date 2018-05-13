@@ -25,10 +25,8 @@ def print_birthday_info(days):
     else:
         print('\nHappy birthday!!!')
         
-def main():
+if __name__ == '__main__':
     birthday = get_user_birthday()
     thisday = datetime.date.today()
     days = date_delta(birthday, thisday)
     print_birthday_info(days)
-    
-main()
