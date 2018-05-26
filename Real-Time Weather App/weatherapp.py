@@ -3,7 +3,8 @@ import requests
 import collections
 
 WeatherReport = collections.namedtuple('WeatherReport',
-                                       'loc, temp, scale, condition')
+                                       'loc, temp, scale, condition, feelslike')
+
 
 def get_html_from_web(zipcode):
     url = 'https://www.wunderground.com/weather/{}'.format(zipcode)
@@ -26,14 +27,16 @@ def get_weather_from_html(html):
     temp = soup.find(class_='wu-unit-temperature').find(class_='wu-value').get_text()
     scale = soup.find(class_='wu-unit-temperature').find(class_='wu-label').get_text()
     condition = soup.find(class_='condition-icon').get_text()
+    feelslike = soup.find(class_='feels-like').get_text()
 
     loc = cleanup_text(loc)
     temp = cleanup_text(temp)
     condition = cleanup_text(condition)
     scale = cleanup_text(scale)
+    feelslike = cleanup_text(feelslike)
 
     # print(loc, temp, scale, condition)
-    report = WeatherReport(loc, temp, scale, condition)
+    report = WeatherReport(loc, temp, scale, condition, feelslike)
     return report
 
 
@@ -56,4 +59,6 @@ if __name__ == "__main__":
     report = get_weather_from_html(html)
 
     # display weather forecast
-    print('The temp in {} is {} {} and {}.'.format(report.loc, report.temp, report.scale, report.condition))
+    print('The temperature in {} is {}°{} ({}) and the weather condition is {}.'.format(report.loc, report.temp,
+                                                                                        report.scale, report.feelslike,
+                                                                                        report.condition))
